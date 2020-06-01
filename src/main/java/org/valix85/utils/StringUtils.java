@@ -2,9 +2,11 @@ package org.valix85.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -35,6 +37,24 @@ public class StringUtils {
             e.printStackTrace();
         }
         return "{\"error\":\"Errore durante la conversione dell'oggetto\"}";
+    }
+
+    public static void printJsonInConsole(Object obj) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String s = objectMapper.writeValueAsString(obj);
+            System.out.println(s);
+        } catch (IOException e) {
+            logger.error("Errore di conversione in JSON dell'oggetto "+obj+" ex: "+e);
+        }
+    }
+
+    public static String[] splitString(String string, String character) {
+        if (!string.equals("") && !character.equals("")) {
+            return string.split(character);
+        }
+        String[] result = new String[]{string};
+        return result;
     }
 
     public static String reduce(String text, int size){

@@ -31,6 +31,8 @@ public class App {
         //System.exit(-1);
 
 
+
+
         String titolo = InputUtils.readLine("Inserisci un titolo");
         List<WikiItemResult> elenco = wu.searchByTitle(titolo);
         for (int i = 0; i < elenco.size(); i++) {

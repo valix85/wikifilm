@@ -169,6 +169,11 @@ public class WikiUtils {
         String query = webpage;
         //logger.debug(query);
         String content = conn.getContentPage(query);
+        try {
+            content = new String(content.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         //logger.debug(content);
         Document doc = Jsoup.parse(content);
         Elements sinottico = doc.select("table.sinottico");
