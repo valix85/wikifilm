@@ -37,7 +37,19 @@ public class ConnectionUtils {
             con.connect();
             int status = con.getResponseCode();
             logger.debug("Status code: " + status);
-            String content = readStream(con.getInputStream());
+            //con.getHeaderFields().entrySet().forEach(System.out::println);
+            String encode="";
+            try{
+                encode = con.getHeaderField("Content-Type").toLowerCase();
+                if(encode.contains("utf-8"))
+                    encode="utf-8";
+                else
+                    encode = encode.substring(encode.indexOf("="));
+            }catch (RuntimeException ex){
+                System.out.println(ex);
+            }
+            //System.out.println("ENCODE: "+encode);
+            String content = readStream(con.getInputStream(),encode);
             con.disconnect();
             //System.out.println(content);
             return content;
@@ -58,6 +70,19 @@ public class ConnectionUtils {
     private static String readStream(InputStream in) {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in));) {
+            String nextLine = "";
+            while ((nextLine = reader.readLine()) != null) {
+                sb.append(nextLine + newLine);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
+
+    private static String readStream(InputStream in, String charset) {
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in,charset))) {
             String nextLine = "";
             while ((nextLine = reader.readLine()) != null) {
                 sb.append(nextLine + newLine);
